@@ -1,6 +1,4 @@
-package com.blogpessoal.blogpessoal.controller; //A camada de Controller é resposavel por: comunicação com o Client (Postman, Angular etc)
-
-
+package com.blogpessoal.blogpessoal.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,55 +20,55 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.blogpessoal.blogpessoal.model.Postagem;
-import com.blogpessoal.blogpessoal.repository.PostagemRepository;
+import com.blogpessoal.blogpessoal.model.Tema;
+import com.blogpessoal.blogpessoal.repository.TemaRepository;
 
 @RestController
-@RequestMapping("/postagens")
-@CrossOrigin("*")
-public class PostagemController {
+@RequestMapping("/temas")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+public class TemaController {
 
 	@Autowired
-	private PostagemRepository repository;
-	
+	private TemaRepository repository;
+
 	@GetMapping
-	public ResponseEntity<List<Postagem>> GetAll() {
+	public ResponseEntity<List<Tema>> getAll() {
 		return ResponseEntity.ok(repository.findAll());
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Postagem> getById(@PathVariable Long id){
-		return repository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
+	public ResponseEntity<Tema> getById(@PathVariable Long id) {
+		return repository.findById(id).map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
-	@GetMapping("/titulo/{titulo}")
-	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo){
-		return ResponseEntity.ok(repository.findAllByTituloContainingIgnoreCase(titulo));
+
+	@GetMapping("/descricao/{descricao}")
+	public ResponseEntity<List<Tema>> getByDescricao(@PathVariable String descricao) {
+		return ResponseEntity.ok(repository.findAllByDescricaoContainingIgnoreCase(descricao));
+		/*na foto do controller está GetByTitle() e no doc da atividade está GetByDescricao(), achei mais 
+		coerente colocar o descricao(), mas acho que nao têm muita importancia. */
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem){
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(repository.save(postagem));
+	public ResponseEntity<Tema> post(@Valid @RequestBody Tema tema) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(tema));
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem){
-		return repository.findById(postagem.getId())
-				.map(resposta -> ResponseEntity.status(HttpStatus.OK)
-				.body(repository.save(postagem)))
+	public ResponseEntity<Tema> put(@Valid @RequestBody Tema tema) {
+		return repository.findById(tema.getId())
+				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(repository.save(tema)))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
-	
+
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
-		Optional<Postagem> postagem = repository.findById(id);
-		
-		if(postagem.isEmpty())
+		Optional<Tema> tema = repository.findById(id);
+
+		if (tema.isEmpty())
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		
+
 		repository.deleteById(id);
 	}
 }
