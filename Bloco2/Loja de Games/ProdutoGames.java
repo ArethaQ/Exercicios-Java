@@ -38,6 +38,28 @@ public class ProdutoGames {
 	@ManyToOne
 	@JsonIgnoreProperties("produtogames")
 	private CategoriaGames categoriagames;
+	
+	@ManyToOne
+	@JsonIgnoreProperties("produtogames")
+	private Usuario usuario;
+	
+	
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
 	public long getId() {
 		return id;

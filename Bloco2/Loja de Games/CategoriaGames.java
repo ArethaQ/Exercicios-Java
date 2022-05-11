@@ -28,8 +28,8 @@ public class CategoriaGames {
 	private String descricao;
 	
 	//começando a referenciar:
-	@OneToMany(mappedBy = "categoriaGames", cascade = CascadeType.REMOVE)
-	@JsonIgnoreProperties("categoriaGames")
+	@OneToMany(mappedBy = "categoriagames", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("categoriagames")
 	private List<ProdutoGames> produtogames;
 
 	public long getId() {
